@@ -7,6 +7,7 @@ import { Navbar } from './components/Navbar';
 
 import { AuthContext } from './context/AuthContext';
 import { BasketContext } from './context/BasketContext'
+import { Container } from '@material-ui/core';
 
 export default function App() {
   const { token, login, logout, userId } = useAuth()
@@ -27,9 +28,9 @@ export default function App() {
       }}>
         <BrowserRouter>
           {isAuthenticated && <Navbar></Navbar>}
-          <div className="container">
+          <Container>
             {routes}
-          </div>
+          </Container>
         </BrowserRouter>
       </BasketContext.Provider>
     </AuthContext.Provider>

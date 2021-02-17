@@ -1,7 +1,11 @@
 import React, { useContext } from 'react'
-import {Link, NavLink, useHistory} from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
+import { AppBar, Typography, IconButton, Button, Toolbar, Link, MenuItem } from '@material-ui/core';
+
 import { AuthContext } from '../context/AuthContext'
 import { BasketContext } from '../context/BasketContext'
+
+
 
 export const Navbar = () => {
     const history = useHistory()
@@ -23,20 +27,20 @@ export const Navbar = () => {
 
     return (
         <nav>
-            <div className="nav-wrapper grey darken-4" style={{ padding: "0 1rem" }}>
-                <div><a href="/" className="brand-logo">SHOP LIST</a></div>
-                <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/create">Создать товар</NavLink></li>
-                    <li><NavLink to="/create-product">Создать продукт</NavLink></li>
-                    <li><NavLink to="/create-preset">Создать пресет</NavLink></li>
-                    <li><NavLink to="/products">Список продуктов</NavLink></li>
-                    <li><NavLink to="/goods">Товары</NavLink></li>
-                    <li><NavLink to="/presets">Пресеты</NavLink></li>
-                    <li><NavLink to="/baskets">Корзины</NavLink></li>
-                    <li>{currentBasketItem}</li>
-                    <li><a href="/" onClick={logoutHandler}>Выйти</a></li>
-                </ul>
-            </div>
+            <AppBar position='static'>
+                <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <IconButton>SHOP LIST</IconButton>
+                        <MenuItem><NavLink to="/create">Создать товар</NavLink></MenuItem>
+                        <NavLink to="/create-product">Создать продукт</NavLink>
+                        <NavLink to="/create-preset">Создать пресет</NavLink>
+                        <NavLink to="/products">Список продуктов</NavLink>
+                        <NavLink to="/goods">Товары</NavLink>
+                        <NavLink to="/presets">Пресеты</NavLink>
+                        <NavLink to="/baskets">Корзины</NavLink>
+                        {currentBasketItem}
+                    <Button onClick={logoutHandler}>Выйти</Button>
+                </Toolbar>
+            </AppBar>
         </nav>
     )
 }
