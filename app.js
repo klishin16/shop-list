@@ -24,13 +24,13 @@ app.use('/api/baskets', require('./routes/basket.routes'))
 app.use('/api/goods', require('./routes/goods.routes')) // список продуктов
 app.use('/api/presets', require('./routes/preset.routes')) // роуты пресетов
 
-if (process.env.NODE_ENV === 'production') {
-    app.use('/', express.static(path.join(__dirname, '../client', 'build')))
+// if (process.env.NODE_ENV === 'production') {
+//     app.use('/', express.static(path.join(__dirname, '../client', 'build')))
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'))
-    })
-}
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'))
+//     })
+// }
 
 async function connectToDB() {
     try {
