@@ -5,7 +5,7 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    goods: {
+    purchases: {
         type: [{type: [Types.ObjectId], ref: 'Purchase'}]
     },
     owner: {

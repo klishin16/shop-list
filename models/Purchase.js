@@ -15,4 +15,4 @@ const schema = new Schema({
         default: false
     }
 })
-module.exports = model('Purshase', schema)
+module.exports = model('Purchase', schema)

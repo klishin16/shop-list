@@ -1,6 +1,7 @@
 const { Router } = require('express')
 
 const Preset = require('../models/Preset')
+const Purchase = require('../models/Purchase')
 const auth = require('../middleware/auth.middleware')
 
 const router = Router()
@@ -33,7 +34,16 @@ router.post('/', auth, async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         console.log('Server -> Preset (GET)');
-        Preset.findOne({ _id: req.params.id }, (err, instance) => {
+        const filter = { _id: req.params.id }
+        Preset.findOne(filter).populate({
+            path: 'purchases',
+            populate: {
+                path: 'good',
+                populate: {
+                    path: 'product'
+                },
+            }
+        }).exec((err, instance) => {
             if (err) {
                 res.status(400).json({ message: err })
             } else {
@@ -47,7 +57,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
     try {
-        console.log('Server -> Product (POST)');
+        console.log('Server -> Preset (POST)');
         const filter = { _id: req.params.id }
         const updateObj = req.body
         console.log("UpdateObj:", updateObj);
@@ -59,7 +69,59 @@ router.post('/:id', async (req, res) => {
             }
         })
     } catch (e) {
-        res.status(500).json({ message: "Что-то пошло не так при попытке обновить продукт" })
+        res.status(500).json({ message: "Что-то пошло не так при попытке обновить пресет" })
+    }
+})
+
+router.post('/:id/addPurchase', async (req, res) => {
+    try {
+        console.log('Server -> Preset Add Purchase (POST)');
+        const filter = { _id: req.params.id }
+        const purchaseObj = req.body
+        console.log("GoodObj:", purchaseObj);
+        Purchase.create(purchaseObj, (err, purchase) => {
+            if(err) {
+                res.status(400).json({ message: err })
+            } else {
+                Preset.findOne(filter, (err, preset) => {
+                    if (err) {
+                        res.status(400).json({ message: err })
+                    } else {
+                        preset.purchases.push(purchase)
+                        preset.save()
+                        res.status(202).json(purchase)
+                    }
+                })
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ message: e.message, des: "Что-то пошло не так при попытке добавить purchase" })
+    }
+})
+
+router.post('/:id/patchPurchases', async (req, res) => {
+    try {
+        console.log('Server -> Preset Patch Purchase (POST)');
+        const filter = { _id: req.params.id }
+        const purchasesObj = req.body
+        console.log("PurchasesObj:", purchasesObj);
+        Purchase.create(purchasesObj, (err, purchases) => {
+            if(err) {
+                res.status(400).json({ message: err })
+            } else {
+                Preset.findOne(filter, (err, preset) => {
+                    if (err) {
+                        res.status(400).json({ message: err })
+                    } else {
+                        preset.purchases = purchases
+                        preset.save()
+                        res.status(202).json(purchases)
+                    }
+                })
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ message: e.message, des: "Что-то пошло не так при попытке добавить purchase" })
     }
 })
 

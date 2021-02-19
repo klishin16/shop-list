@@ -41,7 +41,7 @@ router.get('/:id', async (req, res) => {
         const filter = { _id: req.params.id }
         Basket.findOne(filter)
             .populate({
-                path: 'goods',
+                path: 'purchases',
                 populate: {
                     path: 'good',
                     populate: {
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
             })
             .exec((err, basket) => {
                 if (err) {
-                    res.status(400).json({ message: err })
+                    res.status(400).json({ message: err.message })
                 } else {
                     res.status(200).json(basket)
                 }
@@ -69,7 +69,7 @@ router.post('/:id', async (req, res) => {
         // console.log("Basket -> UpdateObj:", updateObj);
         Basket.findOneAndUpdate(filter, updateObj, (err, instance) => {
             if (err) {
-                res.status(400).json({ message: err })
+                res.status(400).json({ message: err.message })
             } else {
                 res.status(202).json(instance)
             }
@@ -87,13 +87,13 @@ router.post('/:id/addGood', async (req, res) => {
         //TODO await???
 
         const filter = { _id: req.params.id }
-        Basket.findOne(filter, ).populate('goods').exec((basketErr, basket) => {
+        Basket.findOne(filter).populate('goods').exec((basketErr, basket) => {
             if (basketErr) {
                 return res.status(400).json({ message: basketErr })
             } else {
                 //если продукт уже есть в корзине увеличиваем его количество
                 let flag = false
-                basket.goods.forEach((item, index) => {
+                basket.purchases.forEach((item, index) => {
                     if (item.good == goodInBasketObj.good) {
                         GoodInBasket.findOne({ _id: item._id }, (err, gib) => {
                             gib.things++
@@ -112,7 +112,7 @@ router.post('/:id/addGood', async (req, res) => {
                     if (err) {
                         return res.status(400).json({ message: err })
                     } else {
-                        basket.goods.push(goodInBasket._id)
+                        basket.purchases.push(goodInBasket._id)
                         basket.save()
                         res.status(200).json({ message: "Товар успешно добавлен в корзину!" })
                     }
@@ -121,6 +121,44 @@ router.post('/:id/addGood', async (req, res) => {
         })
     } catch (e) {
         res.status(500).json({ message: e.message, desc: "Что-то пошло не так при попытке добавить товар в корзину корзину" })
+    }
+})
+
+router.post('/:id/addPreset', async (req, res) => {
+    try {
+        console.log('Server -> Basket -> Add Preset (POST)');
+        const filter = { _id: req.params.id }
+        const purchasesObj = req.body
+        Basket.findOne(filter).exec((basketErr, basket) => {
+            if (basketErr) {
+                res.status(400).json({ message: basketErr })
+            } else {
+                // let purchaseRequests = purchasesObj.map(purchaseObj => Purchase.create(purchaseObj))
+                // Promise.all(purchaseRequests)
+                //     .then(responses => responses.forEach(purchase => {
+                //         console.log("Callback Purchase:", purchase);
+                //         basket.purchases.push(purchase)
+                //     }))
+                //     .then(() => basket.save())
+                //     .then(() => res.status(200).json("Успешно!"))
+                //     .catch(err => {
+                //         console.log("here");
+                //         res.status(400).json({ message: err })
+                //     })
+                purchasesObj.forEach(purchaseObj => {
+                    basket.purchases.push(purchaseObj)
+                })
+                basket.save(() => (err, basket) => {
+                    if (err) {
+                        res.status(400).json({ message: err })
+                    } else {
+                        res.status(200).json({ message: "Пресет успешно добавлен в корзину!", basket })
+                    }
+                })
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ message: "Что-то пошло не так при попытке добавить пресет" })
     }
 })
 

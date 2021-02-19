@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
+import { useCreateGood } from '../hooks/createGood.hook'
+
 import { Select, MenuItem, FormControl, Button, TextField, Container, Card, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { usePreset } from '../hooks/preset.hook'
 
+import { Loader } from '../components/Loader'
+import { useBasket } from '../hooks/basket.hook';
 
 const useStyles = makeStyles({
     formControl: {
         minWidth: 700,
     },
 
-    titleField: {
+    amountField: {
         marginTop: 14,
     },
 
@@ -34,31 +37,28 @@ const useStyles = makeStyles({
     }
 })
 
-
-export const CreatePreset = () => {
+export const CreateBasketPage = () => {
     const styles = useStyles()
 
-    const { preset, bindTitle, createHandler } = usePreset()
+    const { basket, bindTitle, createBasket } = useBasket()
+
 
     return (
         <div>
             <Card className={styles.card}>
                 <Grid container spacing={3} justify='center'>
                     <Grid item xs={12}>
-                        <div className={styles.title}>Страница создания пресета</div>
+                        <div className={styles.title}>Страница создания корзины</div>
                     </Grid>
                     <Grid item xs={8}>
                         <FormControl className={styles.formControl}>
-                            {/* <Select {...bindSelect}>
-                                {productItems}
-                            </Select> */}
-                            <TextField className={styles.titleField} {...bindTitle} label="Название пресета" type="text" />
-                            <Button className={styles.sublimeButton} onClick={createHandler}>Создать</Button>
+                            <TextField className={styles.amountField} {...bindTitle} label="Название корзины" type="text" />
+                            <Button className={styles.sublimeButton} onClick={createBasket}>Создать корзину</Button>
                         </FormControl>
                     </Grid>
 
                     <Grid item xs={8}>
-                        <pre>{JSON.stringify(preset, null, 2)}</pre>
+                        <pre>{JSON.stringify(basket, null, 2)}</pre>
                     </Grid>
                 </Grid>
             </Card>

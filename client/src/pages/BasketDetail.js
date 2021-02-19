@@ -20,13 +20,13 @@ export const BasketDetail = () => {
 
     useEffect(() => {
         loadBasket(basketId)
-    }, [loadBasket])
+    }, [loadBasket, basketId])
 
     if (loading) {
         return <Loader />
     }
 
-    const listItems = basket.goods.map((purchase) =>
+    const listItems = basket.purchases?.map((purchase) =>
         <Box key={purchase._id}>
             <PurchaseCard inPurchase={purchase}>
                 <Button variant="outlined">Купить</Button>

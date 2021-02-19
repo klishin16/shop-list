@@ -21,7 +21,7 @@ export const Navbar = () => {
 
     const currentBasketItem = (
         <div>
-            {basketId ? <Link to={`/basket/${basketId}`}>Текущая корзина: {basketId}</Link> : 'Текущая корзина: Не определена'}
+            {basketId ? <NavLink to={`/basket/${basketId}`}>Текущая корзина: {basketId}</NavLink> : 'Текущая корзина: Не определена'}
         </div>
     )
 
@@ -30,9 +30,10 @@ export const Navbar = () => {
             <AppBar position='static'>
                 <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <IconButton>SHOP LIST</IconButton>
-                        <MenuItem><NavLink to="/create">Создать товар</NavLink></MenuItem>
+                        <NavLink to="/create">Создать товар</NavLink>
                         <NavLink to="/create-product">Создать продукт</NavLink>
                         <NavLink to="/create-preset">Создать пресет</NavLink>
+                        <NavLink to="/create-basket">Создать корзину</NavLink>
                         <NavLink to="/products">Список продуктов</NavLink>
                         <NavLink to="/goods">Товары</NavLink>
                         <NavLink to="/presets">Пресеты</NavLink>

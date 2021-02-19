@@ -91,8 +91,8 @@ export const GoodsPage = () => {
 
     const listItems = goods.map((good) =>
         <Box className={styles.card} key={good._id}>
-            {/* <Link to={`/good/${good._id}`}>{good.title}</Link> */}
-            <GoodCard good={good} isGoodInBasket={basket.goods.includes(good._id)} addToBasket={addGood}></GoodCard>
+            {/* <Link to={`/good/${good._id}`}>{good.title}</Link> //TODO вниз */ }
+            <GoodCard good={good} isGoodInBasket={basket.purchases?.includes(good._id)} addToBasket={addGood}></GoodCard>
         </Box>
     );
     return (

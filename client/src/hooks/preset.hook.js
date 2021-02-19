@@ -1,12 +1,19 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
 import { useHttp } from '../hooks/http.hook'
+import { useMessage } from './message.hook'
+
+
 
 export const usePreset = () => {
     const [preset, setPreset] = useState({
         title: '',
-        goods: [],
+        purchases: [],
         owner: null
     })
+
+    const { userId, token } = useContext(AuthContext)
+    const message = useMessage()
     
     const { loading, error, request, clearError } = useHttp()
     const [goods, setGoods] = useState([])
@@ -29,11 +36,57 @@ export const usePreset = () => {
         }
     })
 
+    const patchPresetGoods = async (presetId, potenshialGoodsList) => { // потенциально purchase
+        console.log("Patch pontenshialPurchases");
+        const pontenshialPurchases = potenshialGoodsList.map(potGood => {
+            return {
+                good: potGood,
+                things: 1,
+                buy: false
+            }
+        })
+        try {
+            await request(`/api/presets/${presetId}/patchPurchases`, 'POST', pontenshialPurchases)
+        } catch (e) {
+            // Уже обрабатывали
+        }
+    } 
+
+    const titleChangeHandler = (e) => {
+        setPreset({
+            ...preset,
+            title: e.target.value
+        })
+    }
+
+    const createPreset = (async () => {
+        console.log("Create Preset");
+        setPreset({
+            ...preset,
+            owner: userId
+        })
+        try {
+            const authorizationStr = `Bearer ${token}`
+            await request(`/api/presets`, 'POST', preset, {
+                Authorization: authorizationStr
+            })
+            message("Пресет успешо создан!")
+        } catch (e) {
+
+        }
+    })
+
 
     return {
         preset,
         loadPreset,
         patchPreset,
+        bindTitle: {
+            value: preset.title,
+            onChange: titleChangeHandler,
+        },
+        createHandler: createPreset,
+        patchPresetGoods,
         loading,
     }
 }

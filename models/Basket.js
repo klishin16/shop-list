@@ -6,7 +6,7 @@ const schema = new Schema({
         required: true,
         default: 'Новая корзина'
     },
-    goods: [{type: [Types.ObjectId], ref: 'Purshase'}],
+    purchases: [{type: [Types.ObjectId], ref: 'Purchase'}],
     total: {
         type: Number,
         default: 0

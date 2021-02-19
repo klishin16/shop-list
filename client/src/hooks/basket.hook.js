@@ -3,15 +3,17 @@ import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 
 import { BasketContext } from '../context/BasketContext'
+import { AuthContext } from '../context/AuthContext'
 
 
 export const useBasket = () => {
     const [basket, setBasket] = useState({
         title: "",
-        goods: [],
+        purchases: [],
         total: 0,
     })
 
+    const { token } = useContext(AuthContext)
     const message = useMessage()
 
     //x
@@ -53,7 +55,7 @@ export const useBasket = () => {
     })
 
     const addGood = (async (goodId) => {
-        console.log("Add Good", basket.goods.concat(goodId));
+        console.log("Add Good", basket.purchases.concat(goodId));
         // setBasket({
         //     ...basket,
         //     goods: basket.goods.concat(goodId)
@@ -64,12 +66,40 @@ export const useBasket = () => {
         try {
             await request(`/api/baskets/${basketId}/addGood`, 'POST', potenshialPurchase)
             message("Товар успешно добавлен в корзину!")
-            loadBasket(basketId)
-        } catch (e) {
-            
+            loadBasket(basketId) //TODO
+        } catch (e) {   
         }
-
     })
+
+    const addPresetGoods = async (presetObj) => {
+        console.log("Add Preset Goods:", presetObj);
+        try {
+            await request(`/api/baskets/${basketId}/addPreset`, 'POST', presetObj)
+            message("Пресет товаров успешно добавлен в корзину!")
+            // loadBasket(basketId) TODO хз
+        } catch (e) {   
+        }
+    }
+
+    const titleChangeHandler = (e) => {
+        setBasket({
+            ...basket,
+            title: e.target.value
+        })
+    }
+
+    const createBasket = async () => {
+        console.log("Create Basket");
+        try {
+            const authorizationStr = `Bearer ${token}`
+            await request(`/api/baskets/`, 'POST', basket, {
+                Authorization: authorizationStr
+            })
+            message("Корзина успешно создана!")
+        } catch (e) {   
+        }
+    }
+
     //x
     useCallback(() => {
         console.log("Here");
@@ -85,5 +115,11 @@ export const useBasket = () => {
         loading,
         currentBasket,
         addGood,
+        addPresetGoods,
+        bindTitle: {
+            value: basket.title,
+            onChange: titleChangeHandler,
+        },
+        createBasket
     }
 }
