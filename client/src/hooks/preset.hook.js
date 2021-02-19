@@ -9,37 +9,21 @@ export const usePreset = () => {
     })
     
     const { loading, error, request, clearError } = useHttp()
-
-    //x
     const [goods, setGoods] = useState([])
 
-    const addGood = (goodId) => {
-        setPreset({
-            ...preset,
-            goods: preset.goods.concat(goodId)
-        })
-    }
-
-    const removeGood = (goodId) => {
-        setPreset({
-            ...preset,
-            goods: preset.goods.filter(good => good._id !== goodId)
-        })
-    }
-
-    const loadProduct = useCallback(async (productId) => {
+    const loadPreset = useCallback(async (presetId) => {
         try {
-            const data = await request(`/api/products/${productId}`)
-            setProduct(data)
+            const data = await request(`/api/presets/${presetId}`)
+            setPreset(data)
         } catch (e) {
             // Уже обработали в http.hook
         }
     }, [request])
 
-    const patchProduct = (async (productId) => {
-        console.log("Patch Product");
+    const patchPreset = (async (presetId) => {
+        console.log("Patch Preset");
         try {
-            await request(`/api/products/${productId}`, 'POST', product)
+            await request(`/api/presets/${presetId}`, 'POST', preset)
         } catch (e) {
             // Уже обрабатывали
         }
@@ -47,10 +31,9 @@ export const usePreset = () => {
 
 
     return {
-        product,
-        loadProduct,
-        onChange,
-        patchProduct,
+        preset,
+        loadPreset,
+        patchPreset,
         loading,
     }
 }

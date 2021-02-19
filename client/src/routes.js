@@ -10,6 +10,7 @@ import { GoodsPage } from './pages/GoodsPage'
 import { CreateProductPage } from './pages/CreateProductPage'
 import { PresetsPage } from './pages/PresetsPage'
 import { CreatePreset } from './pages/CreatePreset'
+import { PresetDetail } from './pages/PresetDetail'
 
 
 export const appRoutes = (isAuthenticated) => {
@@ -42,6 +43,9 @@ export const appRoutes = (isAuthenticated) => {
                 </Route>
                 <Route path="/create-preset" exact>
                     <CreatePreset></CreatePreset>
+                </Route>
+                <Route path="/preset/:id">
+                    <PresetDetail />
                 </Route>
                 <Redirect to="/baskets" />
             </Switch>

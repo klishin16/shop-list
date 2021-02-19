@@ -32,8 +32,8 @@ router.post('/', auth, async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        console.log('Server -> Product (GET)');
-        Product.findOne({ _id: req.params.id }, (err, instance) => {
+        console.log('Server -> Preset (GET)');
+        Preset.findOne({ _id: req.params.id }, (err, instance) => {
             if (err) {
                 res.status(400).json({ message: err })
             } else {
