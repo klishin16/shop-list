@@ -146,18 +146,22 @@ router.post('/:id/addPreset', async (req, res) => {
                 //         res.status(400).json({ message: err })
                 //     })
                 purchasesObj.forEach(purchaseObj => {
-                    basket.purchases.push(purchaseObj)
+                    if (!basket.purchases.includes(purchaseObj)) {
+                        basket.purchases.push(purchaseObj)
+                    }
                 })
                 basket.save(() => (err, basket) => {
                     if (err) {
                         res.status(400).json({ message: err })
                     } else {
+                        console.log("Пред ошибка");
                         res.status(200).json({ message: "Пресет успешно добавлен в корзину!", basket })
                     }
                 })
             }
         })
     } catch (e) {
+        console.log("Ошибка")
         res.status(500).json({ message: "Что-то пошло не так при попытке добавить пресет" })
     }
 })

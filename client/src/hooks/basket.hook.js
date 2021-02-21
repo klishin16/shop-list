@@ -77,7 +77,8 @@ export const useBasket = () => {
             await request(`/api/baskets/${basketId}/addPreset`, 'POST', presetObj)
             message("Пресет товаров успешно добавлен в корзину!")
             // loadBasket(basketId) TODO хз
-        } catch (e) {   
+        } catch (e) {
+               
         }
     }
 
