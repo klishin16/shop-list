@@ -129,6 +129,7 @@ router.post('/:id/addPreset', async (req, res) => {
         console.log('Server -> Basket -> Add Preset (POST)');
         const filter = { _id: req.params.id }
         const purchasesObj = req.body
+        console.log(purchasesObj);
         Basket.findOne(filter).exec((basketErr, basket) => {
             if (basketErr) {
                 res.status(400).json({ message: basketErr })
