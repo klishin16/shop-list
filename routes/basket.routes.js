@@ -128,37 +128,32 @@ router.post('/:id/addPreset', async (req, res) => {
     try {
         console.log('Server -> Basket -> Add Preset (POST)');
         const filter = { _id: req.params.id }
-        const purchasesObj = req.body
-        console.log(purchasesObj);
+        const purchasesId = req.body
+        console.log(purchasesId);
         Basket.findOne(filter).exec((basketErr, basket) => {
             if (basketErr) {
                 res.status(400).json({ message: basketErr })
             } else {
-                // let purchaseRequests = purchasesObj.map(purchaseObj => Purchase.create(purchaseObj))
-                // Promise.all(purchaseRequests)
-                //     .then(responses => responses.forEach(purchase => {
-                //         console.log("Callback Purchase:", purchase);
-                //         basket.purchases.push(purchase)
-                //     }))
-                //     .then(() => basket.save())
-                //     .then(() => res.status(200).json("Успешно!"))
-                //     .catch(err => {
-                //         console.log("here");
-                //         res.status(400).json({ message: err })
-                //     })
-                purchasesObj.forEach(purchaseObj => {
-                    if (!basket.purchases.includes(purchaseObj)) {
-                        basket.purchases.push(purchaseObj)
+                purchasesId.forEach(purchaseId => {
+                    if (!basket.purchases.includes(purchaseId)) {
+                        basket.purchases.push(purchaseId)
+                    } else { // если purchase уже в списке товаров
+                        Purchase.findOne({_id: purchaseId}).exec((purErr, existPurchase) => {
+                            existPurchase.things++
+                            existPurchase.save()
+                        })
                     }
                 })
-                basket.save(() => (err, basket) => {
-                    if (err) {
-                        res.status(400).json({ message: err })
-                    } else {
+                console.log('Test')
+                basket.save()
+                    .then(basketRes => {
+                        console.log("Успех");
+                        res.status(200).json({ message: "Пресет успешно добавлен в корзину!", basketRes })
+                    })
+                    .catch(err => {
                         console.log("Пред ошибка");
-                        res.status(200).json({ message: "Пресет успешно добавлен в корзину!", basket })
-                    }
-                })
+                        res.status(400).json({ message: err })
+                    })
             }
         })
     } catch (e) {

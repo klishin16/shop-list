@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { FormControl, Button, Container, Card, CardContent, makeStyles, Grid, CardActions, TextField } from '@material-ui/core';
+import { FormControl, Button, Container, Card, CardContent, makeStyles, Grid, CardActions, TextField, Link, Typography } from '@material-ui/core';
 
 import { Loader } from '../components/Loader'
 import { AuthContext } from '../context/AuthContext'
@@ -16,6 +16,11 @@ const useStyles = makeStyles({
         fontSize: 43,
         textAlign: 'center'
     },
+    appButton: {
+        marginTop: 7,
+        marginLeft: 7,
+        marginBottom: 7,
+    }
 })
 
 export const AuthPage = () => {
@@ -75,6 +80,9 @@ export const AuthPage = () => {
                             <Button variant='outlined' disabled={loading} onClick={registerHandler}>Регистрация</Button>
                         </CardActions>
                     </CardContent>
+                    <Typography>
+                        <Link className={styles.appButton} color="inherit" href="/static/shop-list-app.apk">Скачать мобильное приложение</Link>
+                    </Typography>
                 </Card>
             </Grid>
         </Grid>
