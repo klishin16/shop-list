@@ -31,6 +31,28 @@ router.post('/', auth, async (req, res) => {
     }
 })
 
+router.get('/mobile', async (req, res) => {
+    try {
+        Preset.find().populate({
+            path: 'purchases',
+            populate: {
+                path: 'good',
+                populate: {
+                    path: 'product'
+                },
+            }
+        }).exec((err, presets) => {
+            if (err) {
+                res.status(400).json({ message: err })
+            } else {
+                res.status(200).json(presets)
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ message: e.message, desc: "Что-то пошло не так при попытке получения списка существующих в системе пресетов" })
+    }
+})
+
 router.get('/:id', async (req, res) => {
     try {
         console.log('Server -> Preset (GET)');
@@ -62,7 +84,7 @@ router.post('/:id', async (req, res) => {
         const updateObj = req.body
         console.log("UpdateObj:", updateObj);
         Product.findOneAndUpdate(filter, updateObj, (err, instance) => {
-            if(err) {
+            if (err) {
                 res.status(400).json({ message: err })
             } else {
                 res.status(202).json(instance)
@@ -80,7 +102,7 @@ router.post('/:id/addPurchase', async (req, res) => {
         const purchaseObj = req.body
         console.log("GoodObj:", purchaseObj);
         Purchase.create(purchaseObj, (err, purchase) => {
-            if(err) {
+            if (err) {
                 res.status(400).json({ message: err })
             } else {
                 Preset.findOne(filter, (err, preset) => {
@@ -106,7 +128,7 @@ router.post('/:id/patchPurchases', async (req, res) => {
         const purchasesObj = req.body
         console.log("PurchasesObj:", purchasesObj);
         Purchase.create(purchasesObj, (err, purchases) => {
-            if(err) {
+            if (err) {
                 res.status(400).json({ message: err })
             } else {
                 Preset.findOne(filter, (err, preset) => {
